@@ -37,7 +37,8 @@
         /* 
          * 슬라이드 이미지
          * - absolute positioning으로 겹침 처리
-         * - object-fit: contain (비율 유지, 잘림 없음, 남는 여백 검정)
+         * - object-fit: cover (비율 유지하며 화면 가득 채움, 넘치는 부분은 잘림)
+         * - object-position: center (중앙 정렬)
          * - opacity transition으로 부드러운 전환
          */
         .slide-image {
@@ -46,7 +47,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain; 
+            object-fit: cover;     /* 핵심 변경 사항: 화면 꽉 채우기 */
+            object-position: center; /* 중앙 기준 */
             opacity: 0;
             transition: opacity 2000ms ease-in-out; /* 2초 페이드 */
             will-change: opacity;
@@ -59,14 +61,6 @@
             z-index: 2;
         }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
 </head>
 <body>
     <div id="root"></div>
@@ -103,6 +97,7 @@
                     img.src = url;
                     img.alt = `Slide ${index + 1}`;
                     img.className = 'slide-image';
+                    img.style.transitionDuration = `${FADE_MS}ms`; // CSS와 동기화
                     
                     // 첫 번째 이미지는 즉시 표시
                     if (index === 0) {
