@@ -1,124 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Le Aelin Scene</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Kiosk Vision</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@^19.2.3",
+          "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react/": "https://esm.sh/react@^19.2.3/"
+        }
+      }
+    </script>
     <style>
-      html, body { height: 100%; margin: 0; background: #000; overflow: hidden; }
-      #stage {
-        position: fixed; inset: 0;
-        display: grid; place-items: center;
-        background: #000;
-      }
-      img.slide {
-        position: absolute; inset: 0;
-        width: 100%; height: 100%;
-        object-fit: contain; /* 필요하면 cover로 변경 */
-        opacity: 0;
-        transition: opacity 2000ms ease-in-out; /* FADE */
-        will-change: opacity;
-      }
-      img.slide.show { opacity: 1; }
-      /* 로딩 표시(선택) */
-      #hint {
-        position: fixed; left: 16px; bottom: 16px;
-        font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Pretendard", sans-serif;
-        color: rgba(255,255,255,.6);
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
         user-select: none;
+        -webkit-user-select: none;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-</head>
+  </head>
   <body>
-    <div id="stage"></div>
-    <div id="hint">Loading…</div>
-
-    <script>
-      // ====== 여기만 너가 관리하면 됨 ======
-      const SLIDE_IMAGES = [
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image01.jpg",
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image02.jpg",
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image03.jpg",
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image04.jpg",
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image05.jpg",
-        "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image06.jpg",
-      ];
-      const SLIDE_DURATION_MS = 8000; // 각 슬라이드 노출 시간
-      const FADE_MS = 2000;           // 전환(페이드) 시간
-      // ====================================
-
-      const stage = document.getElementById("stage");
-      const hint = document.getElementById("hint");
-
-      // transition 시간 동기화
-      const style = document.createElement("style");
-      style.textContent = `img.slide{transition-duration:${FADE_MS}ms;}`;
-      document.head.appendChild(style);
-
-      let idx = 0;
-      let a, b; // 두 장을 번갈아 사용(페이드 안정적)
-
-      function makeImg() {
-        const img = document.createElement("img");
-        img.className = "slide";
-        img.alt = "slide";
-        stage.appendChild(img);
-        return img;
-      }
-
-      function preload(url) {
-        return new Promise((res) => {
-          const i = new Image();
-          i.onload = () => res(true);
-          i.onerror = () => res(false);
-          i.src = url;
-        });
-      }
-
-      async function start() {
-        if (!SLIDE_IMAGES.length) {
-          hint.textContent = "No images";
-          return;
-        }
-
-        a = makeImg();
-        b = makeImg();
-
-        // 첫 장은 미리 로드
-        const ok = await preload(SLIDE_IMAGES[0]);
-        if (!ok) hint.textContent = "첫 이미지 로드 실패 (URL 확인)";
-        a.src = SLIDE_IMAGES[0];
-        a.classList.add("show");
-        hint.textContent = "";
-
-        setInterval(async () => {
-          const next = (idx + 1) % SLIDE_IMAGES.length;
-          const nextUrl = SLIDE_IMAGES[next];
-
-          // 다음 이미지 로드(실패해도 넘어감)
-          await preload(nextUrl);
-
-          // b에 다음 이미지 로드 → b를 show, a를 hide → swap
-          b.src = nextUrl;
-          b.classList.add("show");
-          a.classList.remove("show");
-
-          // swap
-          [a, b] = [b, a];
-          idx = next;
-        }, SLIDE_DURATION_MS);
-      }
-
-      start();
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
