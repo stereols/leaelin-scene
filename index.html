@@ -50,7 +50,7 @@
             object-fit: cover;     /* 핵심 변경 사항: 화면 꽉 채우기 */
             object-position: center; /* 중앙 기준 */
             opacity: 0;
-            transition: opacity 2000ms ease-in-out; /* 2초 페이드 */
+            transition: opacity 8000ms ease-in-out; /* 8초 페이드 */
             will-change: opacity;
             z-index: 1;
         }
@@ -78,8 +78,9 @@
             "https://leaelin-scene.s3.ap-northeast-2.amazonaws.com/assets/images/image06.jpg"
         ];
 
-        const SLIDE_DURATION_MS = 8000; // 슬라이드 지속 시간 (8초)
-        const FADE_MS = 2000;           // 페이드 전환 시간 (2초)
+        // 2배 더 느리게 설정
+        const SLIDE_DURATION_MS = 16000; // 슬라이드 지속 시간 (16초)
+        const FADE_MS = 8000;           // 페이드 전환 시간 (8초)
 
         /**
          * --- 로직 (Main Logic) ---
